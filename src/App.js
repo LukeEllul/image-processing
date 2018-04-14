@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 const R = require('ramda');
+const math = require('mathjs');
 
-const loc = window.location + '/images/shyla.png';
+const loc = window.location + '/images/coins.png';
 
 const invert = imageData => {
     const data = imageData.slice();
@@ -39,7 +40,9 @@ const App = _ =>
 
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
 
-                const newImageArray = grayscale(imageData);
+                const newImageArray = R.pipe(
+                    grayscale
+                )(imageData);
 
                 const newImageData = new ImageData(
                     Uint8ClampedArray.from(newImageArray),

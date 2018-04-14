@@ -1,3 +1,6 @@
+const R = require('ramda');
+const math = require('mathjs');
+
 const invert = imageData => {
     const data = imageData.slice();
     for (let i = 0; i < data.length; i += 4) {
@@ -11,7 +14,7 @@ const invert = imageData => {
 
 const grayscale = imageData => {
     const data = imageData.slice();
-    for(let i = 0; i < data.length; i += 4){
+    for (let i = 0; i < data.length; i += 4) {
         const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
         data[i] = avg;
         data[i + 1] = avg;
@@ -20,7 +23,51 @@ const grayscale = imageData => {
     return data;
 };
 
+const binarize = T => R.map(p => p > T ? 255 : 0);
+
+const histogramGrayLevel = imageData => {
+    return R.range(0, 256).map(n => {
+        let i = 0;
+        for (let j = 0; j < imageData.length; j += 4)
+            imageData[j] === n && i++;
+        return i;
+    });
+}
+
+const otsuLevel = histigramCounts => {
+    const total = R.sum(histigramCounts);
+    let sumB = 0;
+    let wB = 0;
+    let maximum = 0;
+    const sum1 = math.dot(R.range(0, 256), histigramCounts);
+
+    let level = 0;
+
+    for (let i = 0; i <= 256; i++) {
+        wB = wB + histigramCounts[i];
+        let wF = total - wB;
+        if (wB === 0 || wF === 0)
+            continue;
+        sumB = sumB + i * histigramCounts[i];
+        let mF = (sum1 - sumB) / wF;
+        let between = wB * wF * ((sumB / wB) - mF) * ((sumB / wB) - mF);
+        if (between >= maximum) {
+            level = i;
+            maximum = between;
+        }
+    }
+
+    return level;
+};
+
+const otsuBinarize = R.pipe(
+    grayscale,
+    data => R.pipe(histogramGrayLevel, otsuLevel, t => binarize(t)(data))(data)
+);
+
 module.exports = {
     invert,
-    grayscale
+    grayscale,
+    binarize,
+    otsuBinarize
 };
