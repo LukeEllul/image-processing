@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 const R = require('ramda');
 const math = require('mathjs');
 
-const loc = window.location + '/images/coins.png';
+const loc = window.location + '/images/shyla.png';
 
 const invert = imageData => {
     const data = imageData.slice();
@@ -41,7 +41,8 @@ const App = _ =>
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
 
                 const newImageArray = R.pipe(
-                    grayscale
+                    //powerTransform(1, 1),
+                    R.identity
                 )(imageData);
 
                 const newImageData = new ImageData(
