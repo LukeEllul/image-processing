@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import Plot from 'react-plotly.js';
 const R = require('ramda');
 const math = require('mathjs');
 
-const loc = window.location + '/images/shyla.png';
+const loc = window.location + '/images/sea2.png';
 
 const invert = imageData => {
     const data = imageData.slice();
@@ -26,6 +27,15 @@ const grayscale = imageData => {
     return data;
 };
 
+const histogramGrayLevel = imageData => {
+    return R.range(0, 256).map(n => {
+        let i = 0;
+        for (let j = 0; j < imageData.length; j += 4)
+            imageData[j] === n && i++;
+        return i;
+    });
+}
+
 const App = _ =>
     <div>
         <canvas ref={canvas => {
@@ -41,7 +51,7 @@ const App = _ =>
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
 
                 const newImageArray = R.pipe(
-                    //powerTransform(1, 1),
+                    grayscale,
                     R.identity
                 )(imageData);
 

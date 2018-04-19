@@ -1,5 +1,6 @@
 const R = require('ramda');
 const math = require('mathjs');
+const { histogramGrayLevel } = require('../Histogram/HistogramProcessing');
 
 const invert = imageData => {
     const data = imageData.slice();
@@ -24,15 +25,6 @@ const grayscale = imageData => {
 };
 
 const binarize = T => R.map(p => p > T ? 255 : 0);
-
-const histogramGrayLevel = imageData => {
-    return R.range(0, 256).map(n => {
-        let i = 0;
-        for (let j = 0; j < imageData.length; j += 4)
-            imageData[j] === n && i++;
-        return i;
-    });
-}
 
 const otsuLevel = histigramCounts => {
     const total = R.sum(histigramCounts);
@@ -67,7 +59,7 @@ const otsuBinarize = R.pipe(
 
 const logTransform = c => imageData => {
     const data = grayscale(imageData).slice();
-    for(let i = 0; i < data.length; i += 4){
+    for (let i = 0; i < data.length; i += 4) {
         const s = c * math.log10((data[i] / 255) + 1) * 255;
         data[i] = s;
         data[i + 1] = s;
@@ -78,7 +70,7 @@ const logTransform = c => imageData => {
 
 const powerTransform = (c, y) => imageData => {
     const data = grayscale(imageData).slice();
-    for(let i = 0; i < data.length; i += 4){
+    for (let i = 0; i < data.length; i += 4) {
         const s = c * Math.pow((data[i] / 255), y) * 255;
         data[i] = s;
         data[i + 1] = s;
