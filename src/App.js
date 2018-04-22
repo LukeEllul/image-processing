@@ -3,7 +3,7 @@ import Plot from 'react-plotly.js';
 const R = require('ramda');
 const math = require('mathjs');
 
-const loc = window.location + '/images/sea2.png';
+const loc = window.location + '/images/shyla.png';
 
 const invert = imageData => {
     const data = imageData.slice();
@@ -18,7 +18,7 @@ const invert = imageData => {
 
 const grayscale = imageData => {
     const data = imageData.slice();
-    for(let i = 0; i < data.length; i += 4){
+    for (let i = 0; i < data.length; i += 4) {
         const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
         data[i] = avg;
         data[i + 1] = avg;
@@ -26,15 +26,6 @@ const grayscale = imageData => {
     }
     return data;
 };
-
-const histogramGrayLevel = imageData => {
-    return R.range(0, 256).map(n => {
-        let i = 0;
-        for (let j = 0; j < imageData.length; j += 4)
-            imageData[j] === n && i++;
-        return i;
-    });
-}
 
 const App = _ =>
     <div>
