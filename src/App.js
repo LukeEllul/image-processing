@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
 const R = require('ramda');
 const math = require('mathjs');
+const { ComplexArray } = require('jsfft');
 
-const loc = window.location + '/images/shyla.png';
+const loc = window.location + '/images/coins.png';
 
 const invert = imageData => {
     const data = imageData.slice();
@@ -27,44 +28,47 @@ const grayscale = imageData => {
     return data;
 };
 
-const addSaltandPepper = R.curry((black, white, imageData) => {
-    const data = imageData.slice();
-    for(let i = 0; i < data.length; i += 4){
-        const r = math.random(0, 256);
-        const p = r <= black ? 0 : r >= white ? 255 : data[i];
-        data[i] = p;
-        data[i + 1] = p;
-        data[i + 2] = p;
+const fourier = width => imageData => {
+    const data = [];
+    let u = 0;
+    for (let i = 0; i < imageData.length; i += 4) {
+        data[u] = imageData[i];
+        u++;
     }
-    return data;
-});
 
-const filter = R.curry((f, width, height, N, imageData) => {
-    const data = imageData.slice();
-    const m = Math.floor(N / 2);
-    for(let y = 0; y < height; y++){
-        for(let x = 0; x < width; x++){
-            const p = [];
-            for(let k = y - m; k < y + m; k++){
-                for(let j = x - m; j < x + m; j++){
-                    const v = imageData[((k * (width * 4)) + (j * 4))];
-                    p.push(v);
-                }
-            }
-            const sortedArray = R.sort((a, b) => a - b, p);
-            const n = f(sortedArray);
-            const pos = ((y * (width * 4)) + (x * 4));
-            data[pos] = n;
-            data[pos + 1] = n;
-            data[pos + 2] = n;
+    const array = new ComplexArray(data.length).map((value, i, n) => {
+        value.real = data[i] / 255;
+    });
+
+    let frequencies = array.FFT();
+
+    console.log(frequencies);
+
+    frequencies.map((freq, i, n) => {
+        if(i % 5 === 0){
+            freq.real = 0;
+            freq.imag = 0;
+        }
+    });
+
+    frequencies = frequencies.InvFFT();
+
+    const data2 = imageData.slice();
+
+    let i = 0;
+    for (let y = 0; y < width; y++) {
+        for (let x = 0; x < width; x++) {
+            const v = frequencies.real[i] * 255;
+            const p = ((y * (width * 4)) + (x * 4));
+            data2[p] = v
+            data2[p + 1] = v;
+            data2[p + 2] = v;
+            i++;
         }
     }
-    return data;
-});
 
-const medianFilter = filter(a => a[Math.floor(a.length / 2)]);
-const maxFilter = filter(a => a[a.length - 1]);
-const minFilter = filter(a => a[0]);
+    return data2;
+}
 
 const App = _ =>
     <div>
@@ -80,10 +84,10 @@ const App = _ =>
 
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
 
+
                 const newImageArray = R.pipe(
                     grayscale,
-                    addSaltandPepper(3, 253),
-                    medianFilter(canvas.width, canvas.height, 3),
+                    fourier(image.width),
                     R.identity
                 )(imageData);
 
