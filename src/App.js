@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
 const R = require('ramda');
 const math = require('mathjs');
-const { ComplexArray } = require('jsfft');
 
 const loc = window.location + '/images/coins.png';
 
@@ -28,48 +27,6 @@ const grayscale = imageData => {
     return data;
 };
 
-const fourier = width => imageData => {
-    const data = [];
-    let u = 0;
-    for (let i = 0; i < imageData.length; i += 4) {
-        data[u] = imageData[i];
-        u++;
-    }
-
-    const array = new ComplexArray(data.length).map((value, i, n) => {
-        value.real = data[i] / 255;
-    });
-
-    let frequencies = array.FFT();
-
-    console.log(frequencies);
-
-    frequencies.map((freq, i, n) => {
-        if(i % 5 === 0){
-            freq.real = 0;
-            freq.imag = 0;
-        }
-    });
-
-    frequencies = frequencies.InvFFT();
-
-    const data2 = imageData.slice();
-
-    let i = 0;
-    for (let y = 0; y < width; y++) {
-        for (let x = 0; x < width; x++) {
-            const v = frequencies.real[i] * 255;
-            const p = ((y * (width * 4)) + (x * 4));
-            data2[p] = v
-            data2[p + 1] = v;
-            data2[p + 2] = v;
-            i++;
-        }
-    }
-
-    return data2;
-}
-
 const App = _ =>
     <div>
         <canvas ref={canvas => {
@@ -87,7 +44,6 @@ const App = _ =>
 
                 const newImageArray = R.pipe(
                     grayscale,
-                    fourier(image.width),
                     R.identity
                 )(imageData);
 
