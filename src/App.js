@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
 const R = require('ramda');
 const math = require('mathjs');
+const { otsuBinarize, binarize } = require('./Functions/PointProcessing/PointProcessing');
 
 const loc = window.location + '/images/coins.png';
 
