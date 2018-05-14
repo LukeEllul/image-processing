@@ -1,62 +1,62 @@
 import React, { Component } from 'react';
-import Plot from 'react-plotly.js';
-const R = require('ramda');
-const math = require('mathjs');
-const { otsuBinarize, binarize } = require('./Functions/PointProcessing/PointProcessing');
+import { withStyles } from '@material-ui/core/styles';
 
-const loc = window.location + '/images/coins.png';
+import OriginalCanvas from './redux/components/OriginalCanvas';
+import ProcessedCanvas from './redux/components/ProcessedCanvas';
 
-const invert = imageData => {
-    const data = imageData.slice();
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] = 255 - data[i];
-        data[i + 1] = 255 - data[i + 1];
-        data[i + 2] = 255 - data[i + 2];
+const { createStore } = require('redux');
+const { Provider } = require('react-redux');
+
+const { initialState } = require('./redux/state/initialState');
+const { root } = require('./redux/reducers/root');
+
+// const App = _ =>
+//     <div>
+//         <canvas ref={canvas => {
+//             const context = canvas.getContext('2d');
+//             const image = new Image();
+//             image.src = loc;
+
+//             image.onload = function () {
+//                 canvas.width = image.naturalWidth;
+//                 canvas.height = image.naturalHeight;
+//                 context.drawImage(image, 0, 0);
+
+//                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
+
+//                 const newImageArray = R.pipe(
+//                     grayscale,
+//                     R.identity
+//                 )(imageData);
+
+//                 const newImageData = new ImageData(
+//                     Uint8ClampedArray.from(newImageArray),
+//                     canvas.width,
+//                     canvas.height
+//                 );
+
+//                 context.putImageData(newImageData, 0, 0);
+//             }
+//         }} />
+//     </div>
+
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        justifyContent: 'space-around',
+        flexWrap: 'wrap'
     }
+});
 
-    return data;
-};
+const store = createStore(root, initialState);
 
-const grayscale = imageData => {
-    const data = imageData.slice();
-    for (let i = 0; i < data.length; i += 4) {
-        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        data[i] = avg;
-        data[i + 1] = avg;
-        data[i + 2] = avg;
-    }
-    return data;
-};
+const App = ({classes}) =>
+    <Provider store={store}>
+        <div className={classes.root}>
+            <OriginalCanvas />
+            <ProcessedCanvas />
+        </div>
+    </Provider>;
 
-const App = _ =>
-    <div>
-        <canvas ref={canvas => {
-            const context = canvas.getContext('2d');
-            const image = new Image();
-            image.src = loc;
-
-            image.onload = function () {
-                canvas.width = image.naturalWidth;
-                canvas.height = image.naturalHeight;
-                context.drawImage(image, 0, 0);
-
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
-
-
-                const newImageArray = R.pipe(
-                    grayscale,
-                    R.identity
-                )(imageData);
-
-                const newImageData = new ImageData(
-                    Uint8ClampedArray.from(newImageArray),
-                    canvas.width,
-                    canvas.height
-                );
-
-                context.putImageData(newImageData, 0, 0);
-            }
-        }} />
-    </div>
-
-export default App;
+export default withStyles(styles)(App);
