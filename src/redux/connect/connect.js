@@ -1,5 +1,7 @@
 const mapStateToProps = state => ({
-    imageData: state.processedCanvas.ImageData
+    imageData: state.originalCanvas.ImageData,
+    width: state.processedCanvas.width,
+    height: state.processedCanvas.height
 });
 
 module.exports = {

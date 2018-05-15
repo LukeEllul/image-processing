@@ -3,8 +3,8 @@ const { connect } = require('react-redux');
 
 const OriginalCanvas = connect(
     state => ({
-        width: state.originalCanvas.width,
-        height: state.originalCanvas.height,
+        width: state.processedCanvas.width,
+        height: state.processedCanvas.height,
         imageSrc: state.originalCanvas.image.src,
     }),
     dispatch => ({
@@ -20,11 +20,18 @@ const OriginalCanvas = connect(
                 height: height
             })
         ),
-        updateImageData: imageData => dispatch({
-            CanvasName: 'processedCanvas',
-            type: 'CHANGE_CANVAS_IMAGEDATA',
-            imagedata: imageData
-        })
+        updateImageData: imageData => (
+            dispatch({
+                CanvasName: 'processedCanvas',
+                type: 'CHANGE_CANVAS_IMAGEDATA',
+                imagedata: imageData
+            }),
+            dispatch({
+                CanvasName: 'originalCanvas',
+                type: 'CHANGE_CANVAS_IMAGEDATA',
+                imagedata: imageData
+            })
+        )
     })
 )(ui);
 

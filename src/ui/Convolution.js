@@ -15,7 +15,7 @@ const Filter = filterType => ({classes, width, height, update, imageData}) =>
             {filterType}
         </Typography>
         <Slider min={3} max={10} step={1} value={3}
-            onChange={(_, value) => update(value, imageData)}/>
+            onChange={(_, value) => update(value, width, height, imageData)}/>
     </div>;
 
 export default {

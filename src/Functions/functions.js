@@ -25,5 +25,6 @@ module.exports = {
     binarize,
     otsuBinarize,
     logTransform,
-    powerTransform
+    powerTransform,
+    TwoPass
 };
