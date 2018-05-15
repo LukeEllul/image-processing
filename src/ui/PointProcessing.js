@@ -11,7 +11,7 @@ const style = theme => ({
     }
 });
 
-const BasicButton = R.pipe(
+const BasicButton = style => R.pipe(
     text => ({ classes, imageData, update }) =>
         <Button className={classes.button} color="primary"
             onClick={_ => update(imageData)}>
@@ -51,7 +51,7 @@ const PowerTransform = ({ classes, imageData, update }) =>
     </div>;
 
 export default {
-    BasicButton,
+    BasicButton: BasicButton(style),
     Binarize: withStyles(style)(Binarize),
     LogTransform: withStyles(style)(LogTransform),
     PowerTransform: withStyles(style)(PowerTransform)
