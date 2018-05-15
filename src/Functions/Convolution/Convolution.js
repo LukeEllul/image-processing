@@ -14,6 +14,7 @@ const convolution = R.curry((imageWidth, imageHeight, Mask, imageData) => {
             let acc = 0;
             for (let k = -Math.floor(n / 2); k <= Math.floor(n / 2); k++) {
                 for (let j = -Math.floor(m / 2); j <= Math.floor(n / 2); j++) {
+                    if(!mask[k + Math.abs(k)]) return imageData;
                     const h = mask[k + Math.abs(k)][j + Math.abs(j)];
                     const f = imageData[(((y - k) * (imageWidth * 4)) + ((x - j) * 4))] / 255;
                     acc += (h * f);

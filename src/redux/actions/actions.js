@@ -1,6 +1,6 @@
 const updateImageData = imageData => ({
     CanvasName: 'processedCanvas',
-    type: 'CANVAS_CHANGE_IMAGEDATA',
+    type: 'CHANGE_CANVAS_IMAGEDATA',
     imagedata: imageData
 });
 

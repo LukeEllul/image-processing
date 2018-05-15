@@ -2,7 +2,8 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Slider from 'material-ui/Slider';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css'
 const R = require('ramda');
 
 const style = theme => ({
@@ -11,11 +12,11 @@ const style = theme => ({
 
 const Filter = filterType => ({classes, width, height, update, imageData}) =>
     <div>
-        <Typography variant="title">
+        <Typography variant="subheading">
             {filterType}
         </Typography>
-        <Slider min={3} max={10} step={1} value={3}
-            onChange={(_, value) => update(value, width, height, imageData)}/>
+        <Slider min={3} max={10} step={1} defaultValue={3}
+            onChange={(value) => update(value, width, height, imageData)}/>
     </div>;
 
 export default {

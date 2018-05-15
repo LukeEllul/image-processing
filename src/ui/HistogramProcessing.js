@@ -4,21 +4,24 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ui from './PointProcessing';
+const R = require('ramda');
 const { histogramGrayLevel } = require('../Functions/functions');
 
 const style = theme => ({
-
+    button: {
+        margin: theme.spacing.unit
+    }
 });
 
-const HistogramEqualization = ui.BasicButton(style)('Histogram Equalization');
+const HistogramEqualization = ui.BasicButton('Histogram Equalization');
 
 const ImageHistogram = ({classes, imageData}) =>
     <div>
         <Plot data={[
             {
-                type: 'histogram',
+                type: 'bar',
                 x: R.range(0, 256),
-                y: histogramGrayLevel(imageData)
+                y: (histogramGrayLevel(imageData))
             }
         ]}/>
     </div>;

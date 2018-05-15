@@ -9,7 +9,7 @@ const AverageFilter = connect(
     mapStateToProps,
     dispatch => ({
         update: (v, width, height, imageData) => 
-            dispatch(updateImageData(averageFilter(width, height, v, imageData)))
+            dispatch(updateImageData(averageFilter(width, height, v)(imageData)))
     })
 )(ui.Filter('Average Filter'));
 
@@ -17,7 +17,7 @@ const GaussianFilter = connect(
     mapStateToProps,
     dispatch => ({
         update: (v, width, height, imageData) =>
-            dispatch(updateImageData(gaussianFilter(width, height, 5, v, imageData)))
+            dispatch(updateImageData(gaussianFilter(width, height, 5, v)(imageData)))
     })
 )(ui.Filter('Gaussian Filter'));
 

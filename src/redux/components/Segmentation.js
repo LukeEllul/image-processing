@@ -13,6 +13,4 @@ const Segmentation = connect(
     })
 )(ui.Segmentation);
 
-export default {
-    Segmentation
-};
+export default Segmentation;

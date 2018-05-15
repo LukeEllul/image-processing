@@ -14,7 +14,11 @@ const AddNoise = connect(
 )(ui.AddNoise);
 
 const makeFilter = (f, type) => connect(
-    mapStateToProps,
+    state => ({
+        width: state.processedCanvas.width,
+        height: state.processedCanvas.height,
+        imageData: state.processedCanvas.ImageData
+    }),
     dispatch => ({
         update: (width, height, v, imageData) =>
             dispatch(updateImageData(f(width, height, v, grayscale(imageData))))
@@ -26,6 +30,7 @@ const MaxFilter = makeFilter(maxFilter, 'Maximum Filter');
 const MinFilter = makeFilter(minFilter, 'Minimum Filter');
 
 export default {
+    AddNoise,
     MedianFilter,
     MaxFilter,
     MinFilter

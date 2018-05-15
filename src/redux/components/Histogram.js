@@ -13,7 +13,9 @@ const HistogramEqualization = connect(
 )(ui.HistogramEqualization);
 
 const ImageHistogram = connect(
-    mapStateToProps
+    state => ({
+    	imageData: state.processedCanvas.ImageData
+    })
 )(ui.ImageHistogram);
 
 export default {
