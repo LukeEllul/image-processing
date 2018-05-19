@@ -32,9 +32,9 @@ npm install -g serve
 ```
 This will install a NodeJs module which can serve your app. Now, naviagate to the root directory of the project and with your terminal issue the command:
 ```
-serve build
+serve -s build
 ```
-This will create a Node server and serve the web app on [localhost](http://localhost:3000). Navigate to [http://localhost:3000](http://localhost:3000) on your favourite web browser to see the web app in action.
+This will create a Node server and serve the web app on [localhost](http://localhost:5000). Navigate to [http://localhost:5000](http://localhost:5000) on your favourite web browser to see the web app in action.
 
 ## Folder Structure
 
